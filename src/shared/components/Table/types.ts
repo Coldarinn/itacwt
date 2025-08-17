@@ -5,6 +5,13 @@ export type TRecord = Record<string, unknown>
 export type SortDirection = "asc" | "desc" | null
 export type SortState = { path: string; dir: SortDirection; comparator?: (a: unknown, b: unknown, direction: SortDirection) => number }
 
+type EditableConfig<T extends TRecord> = {
+  editable?: boolean | ((row: T) => boolean)
+  fieldType?: "text" | "number" | "boolean" | "date" | "select"
+  options?: { value: string; label: string }[]
+  validation?: (value: unknown) => string | null
+}
+
 export type Column<T extends TRecord> = {
   key: string
   header: ReactNode
@@ -15,8 +22,7 @@ export type Column<T extends TRecord> = {
   sticky?: boolean
   grow?: boolean
   render?: (row: T, index: number) => ReactNode
-  editable?: (row: T) => boolean
-}
+} & EditableConfig<T>
 
 export type TableProps<T extends TRecord> = {
   data: T[]

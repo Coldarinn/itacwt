@@ -1,6 +1,8 @@
 import cls from "classnames"
-import { memo } from "react"
+import { memo, useState } from "react"
 
+import { EditModal } from "./EditModal"
+import { editableColkey } from "./constants"
 import type { Column, TRecord } from "./types"
 import { deepGet } from "./utils"
 
@@ -10,6 +12,8 @@ type Props<T extends TRecord> = {
 }
 
 const RowComponent = <T extends TRecord>({ row, columns }: Props<T>) => {
+  const [isEditing, setIsEditing] = useState(false)
+
   return (
     <div className="flex w-full border-b table-border row-hover">
       {columns.map((col, index) => (
@@ -22,9 +26,17 @@ const RowComponent = <T extends TRecord>({ row, columns }: Props<T>) => {
             flexGrow: col.grow || col.grow === undefined ? 1 : 0,
           }}
         >
-          {col.render?.(row, index) ?? <span className="truncate">{String(deepGet(row, col.key)) || "—"}</span>}
+          {col.key === editableColkey ? (
+            <button onClick={() => setIsEditing(true)} className="btn-ghost text-xs">
+              Edit
+            </button>
+          ) : (
+            (col.render?.(row, index) ?? <span className="truncate">{String(deepGet(row, col.key)) || "—"}</span>)
+          )}
         </div>
       ))}
+
+      <EditModal row={row} columns={columns} onSave={() => setIsEditing(false)} open={isEditing} onClose={() => setIsEditing(false)} />
     </div>
   )
 }

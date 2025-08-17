@@ -1,7 +1,5 @@
 import type { SortDirection, SortState } from "./types"
 
-type Path = string
-
 export const sortData = <T extends object>(rows: T[], sort: SortState | null): T[] => {
   if (!sort?.dir) return [...rows]
 
@@ -14,14 +12,10 @@ export const sortData = <T extends object>(rows: T[], sort: SortState | null): T
   })
 }
 
-export const deepGet = <T extends object>(obj: T, path: Path): unknown => {
-  if (!path) return obj
-
-  return path.split(".").reduce((acc: unknown, key: string) => {
-    if (acc === null || acc === undefined) return undefined
-    if (typeof acc !== "object") return undefined
-    return (acc as Record<string, unknown>)[key]
-  }, obj)
+export const deepGet = <T extends object>(obj: T, path: string): unknown => {
+  return path
+    .split(".")
+    .reduce<unknown>((acc, key) => (acc !== null && typeof acc === "object" && key in acc ? (acc as Record<string, unknown>)[key] : undefined), obj)
 }
 
 const defaultComparator = (a: unknown, b: unknown, direction: SortDirection): number => {
@@ -52,4 +46,30 @@ const defaultComparator = (a: unknown, b: unknown, direction: SortDirection): nu
   return direction === "asc"
     ? String(a).localeCompare(String(b), undefined, { sensitivity: "base", numeric: true })
     : String(b).localeCompare(String(a), undefined, { sensitivity: "base", numeric: true })
+}
+
+export const deepSet = <T>(obj: T, path: string, value: unknown): T => {
+  const keys = path.split(".")
+  let current = obj as Record<string, unknown>
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!current[keys[i]]) current[keys[i]] = {}
+    current = current[keys[i]] as Record<string, unknown>
+  }
+  current[keys[keys.length - 1]] = value
+  return obj
+}
+
+export const formatDate = (value: string | number | Date) =>
+  new Date(value).toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  })
+
+export const formatNumber = (value: number | string) => {
+  return new Intl.NumberFormat("ru-RU", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(+value)
 }

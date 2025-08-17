@@ -1,6 +1,6 @@
 import type { SortDirection } from "@/shared/components/Table"
 
-const SIZE_ORDER = ["S", "M", "L", "XL", "XXL"]
+export const SIZE_ORDER = ["S", "M", "L", "XL", "XXL"]
 
 export const sizeComparator = (a: unknown, b: unknown, dir: SortDirection): number => {
   const normalize = (size: unknown): string => (typeof size === "string" ? size.toUpperCase().trim() : "")
