@@ -6,6 +6,7 @@ import { type Column, Table } from "@/shared/components/Table"
 
 import { getProductsAction } from "./api"
 import type { Product } from "./types"
+import { sizeComparator } from "./utils"
 
 export const Products = reatomComponent(() => {
   const data = getProductsAction.data()
@@ -26,7 +27,7 @@ export const Products = reatomComponent(() => {
 const columns: Column<Product>[] = [
   { key: "id", header: "ID", width: 110, grow: false },
   { key: "name", header: "name" },
-  { key: "options.size", header: "size", sortable: false },
+  { key: "options.size", header: "size", comparator: sizeComparator },
   { key: "options.amount", header: "amount" },
   { key: "active", header: "Active", render: ({ active }) => (active ? "✅" : "❌") },
   { key: "createdAt", header: "createdAt" },

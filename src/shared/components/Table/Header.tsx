@@ -21,7 +21,7 @@ const HeaderComponent = <T extends TRecord>(props: Props<T>) => {
       else if (sortState.dir === "desc") dir = null
     }
 
-    onSortChange({ path: col.key, dir })
+    onSortChange({ path: col.key, dir, comparator: col.comparator })
   }
 
   return (
