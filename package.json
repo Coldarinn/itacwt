@@ -15,7 +15,10 @@
     "prepare": "git config core.hooksPath .git-hooks || echo 'Not in a git repo'"
   },
   "dependencies": {
+    "@reatom/core": "^1000.0.0-alpha.34",
+    "@reatom/react": "^1000.0.0-alpha.32",
     "@tailwindcss/vite": "^4.1.12",
+    "@tanstack/react-virtual": "^3.13.12",
     "classnames": "^2.5.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

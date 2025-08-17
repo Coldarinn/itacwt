@@ -1,6 +1,8 @@
 import { Navigate, createBrowserRouter } from "react-router"
 import { type RouteObject } from "react-router"
 
+import { Products } from "@/pages/products"
+
 import { Layout } from "./Layout/Layout"
 
 export const routes: RouteObject[] = [
@@ -10,7 +12,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <h1>Products Page</h1>,
+        element: <Products />,
       },
       {
         path: "/price-plans",

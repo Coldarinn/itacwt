@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+.row-hover:hover {
+  @apply bg-white/5 transition-colors duration-200;
+}
+
+.table-border {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.table-rounded {
+  @apply rounded-xl overflow-hidden;
+}
+
+.sticky-header {
+  @apply sticky top-0 z-3 bg-[var(--color-panel)] backdrop-blur-sm;
+}
+
+.cell {
+  @apply flex items-center shrink-0 px-4 py-3;
+}
+
+.sticky {
+  @apply sticky left-0 z-2 bg-[var(--color-panel)];
+}
+
+.loader {
+  @apply w-5 h-5 border-2 border-white/70 border-t-transparent rounded-full animate-spin;
+}
