@@ -1,5 +1,4 @@
-import type { Product } from "./types"
-import { SIZES } from "./utils"
+import type { PricePlan } from "./types"
 
 const words = [
   "lorem",
@@ -33,13 +32,10 @@ const randomName = () => {
   return Array.from({ length: wordCount }, () => words[Math.floor(Math.random() * words.length)]).join(" ")
 }
 
-export const productsMock: Product[] = Array.from({ length: 500 }, () => ({
+export const pricePlansMock: PricePlan[] = Array.from({ length: 500 }, () => ({
   id: Math.floor(Math.random() * 1_000_000_00),
-  name: randomName(),
-  options: {
-    size: SIZES[Math.floor(Math.random() * SIZES.length)],
-    amount: Math.floor(Math.random() * 1000),
-  },
+  description: randomName(),
   active: Math.random() > 0.5,
   createdAt: randomDate(new Date(1950, 0, 1), new Date()).toISOString(),
+  removedAt: randomDate(new Date(1950, 0, 1), new Date()).toISOString(),
 }))

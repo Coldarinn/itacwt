@@ -9,17 +9,16 @@ import type { FilterConfig } from "@/shared/components/Table/Filters/types"
 import { useFilters } from "@/shared/components/Table/Filters/useFilters"
 import { applyFilters } from "@/shared/components/Table/Filters/utils"
 
-import { getProductsAction } from "./api"
-import type { Product } from "./types"
-import { SIZES, sizeComparator } from "./utils"
+import { getPricePlansAction } from "./api"
+import type { PricePlan } from "./types"
 
-export const Products = reatomComponent(() => {
-  const data = getProductsAction.data()
+export const PricePlans = reatomComponent(() => {
+  const data = getPricePlansAction.data()
 
-  const isFetching = !getProductsAction.ready()
+  const isFetching = !getPricePlansAction.ready()
 
-  const editHandler = useCallback((updatedRow: Product) => {
-    getProductsAction.data.set((prev) => prev.map((item) => (item.id === updatedRow.id ? updatedRow : item)))
+  const editHandler = useCallback((updatedRow: PricePlan) => {
+    getPricePlansAction.data.set((prev) => prev.map((item) => (item.id === updatedRow.id ? updatedRow : item)))
   }, [])
 
   const { filters, activeFilters, addFilter, updateFilter, removeFilter, resetFilters, toggleFilter } = useFilters()
@@ -28,24 +27,11 @@ export const Products = reatomComponent(() => {
 
   const availableFilters: FilterConfig[] = [
     {
-      field: "name",
+      field: "description",
       type: "text",
-      label: "Name",
+      label: "Description",
       operators: ["contains", "equals", "startsWith", "endsWith"],
-      placeholder: "Search by name...",
-    },
-    {
-      field: "options.size",
-      type: "select",
-      label: "Size",
-      operators: ["equals"],
-      options: SIZES.map((size) => ({ label: size, value: size })),
-    },
-    {
-      field: "options.amount",
-      type: "number",
-      label: "Amount",
-      operators: ["equals", "greaterThan", "lessThan", "between"],
+      placeholder: "Search by description...",
     },
     {
       field: "active",
@@ -57,6 +43,12 @@ export const Products = reatomComponent(() => {
       field: "createdAt",
       type: "date",
       label: "Creation Date",
+      operators: ["between"],
+    },
+    {
+      field: "removedAt",
+      type: "date",
+      label: "Removing Date",
       operators: ["between"],
     },
   ]
@@ -87,7 +79,7 @@ export const Products = reatomComponent(() => {
             virtualized={{ rowHeight: 58 }}
           />
         ) : (
-          <Empty className="w-full" description={filters.length > 0 ? "Try changing your filters" : "No products found"} />
+          <Empty className="w-full" description={filters.length > 0 ? "Try changing your filters" : "No PricePlans found"} />
         )}
       </div>
 
@@ -96,17 +88,11 @@ export const Products = reatomComponent(() => {
   )
 })
 
-const sizeOptions = SIZES.map((item) => ({
-  label: item,
-  value: item,
-}))
-
-const columns: Column<Product>[] = [
+const columns: Column<PricePlan>[] = [
   { key: "id", header: "ID", width: 110, grow: false, editable: false },
-  { key: "name", header: "Name", editable: (row) => row.active, validation: (value) => (value ? null : "Field is required") },
-  { key: "options.size", header: "Size", comparator: sizeComparator, fieldType: "select", options: sizeOptions },
-  { key: "options.amount", header: "Amount", fieldType: "number" },
+  { key: "description", header: "description", editable: (row) => row.active, validation: (value) => (value ? null : "Field is required") },
   { key: "active", header: "Active", render: ({ active }) => (active ? "✅" : "❌"), fieldType: "boolean" },
   { key: "createdAt", header: "Created at", fieldType: "date" },
+  { key: "removedAt", header: "Removed at", fieldType: "date" },
   { key: editableColkey, header: "", width: 80, grow: false },
 ]

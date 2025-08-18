@@ -130,7 +130,7 @@ export const Filters = (props: FiltersProps) => {
   }
 
   return (
-    <div className={`panel mb-4 ${className}`}>
+    <div className={cls("panel mb-4 grid", className, { "gap-4": filters?.length })}>
       <div className="space-y-3">
         {filters.map((filter) => {
           const config = availableFilters.find((f) => f.field === filter.field)
@@ -182,7 +182,7 @@ export const Filters = (props: FiltersProps) => {
         })}
       </div>
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-3">
         <button onClick={handleAddFilter} className="btn-ghost btn-primary">
           {addButtonText}
         </button>
