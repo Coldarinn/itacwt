@@ -45,3 +45,15 @@ body {
 .animate-fadeIn {
   animation: fadeIn 180ms ease-out;
 }
+
+::-webkit-scrollbar {
+  @apply w-1.5 h-1.5;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply cursor-grab bg-[var(--color-brand-from)] rounded-lg hover:bg-[var(--color-brand-to)];
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent rounded-lg;
+}

@@ -25,7 +25,7 @@ export const applyFilters = <T extends object>(data: T[], filters: FilterConditi
 
     return Object.entries(fieldGroups).every(([_, fieldFilters]) => {
       return fieldFilters.some((filter) => {
-        if (filter.isActive === false) return true
+        if (filter.isActive === false || (!["isTrue", "isFalse"].includes(filter.operator) && !filter.value)) return true
 
         const fieldValue = deepGet(item, filter.field)
 

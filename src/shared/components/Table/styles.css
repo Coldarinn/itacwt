@@ -28,6 +28,18 @@
   @apply w-5 h-5 border-2 border-white/70 border-t-transparent rounded-full animate-spin;
 }
 
-select option {
+.input {
+  @apply w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2;
+}
+
+.checkbox {
+  @apply rounded border-[var(--color-border)];
+}
+
+.select option {
   @apply bg-slate-900 text-white;
+}
+
+.filters-btn {
+  @apply justify-center p-0! w-10 h-10 rounded;
 }

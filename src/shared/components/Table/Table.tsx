@@ -22,6 +22,7 @@ const TableComponent = <T extends TRecord>(props: TableProps<T>) => {
     onEndReached,
     isLoadingMore = false,
     onEdit,
+    className = "",
   } = props
 
   const [sortState, setSortState] = useState<SortState>(sortStateProp || { path: "", dir: null })
@@ -86,7 +87,7 @@ const TableComponent = <T extends TRecord>(props: TableProps<T>) => {
   const rows = virtualized ? renderVirtualizedRows() : renderFlatRows()
 
   return (
-    <div ref={parentRef} className="w-full overflow-y-auto bg-inherit">
+    <div ref={parentRef} className={`w-full overflow-y-auto bg-inherit ${className}`}>
       <Header columns={columns} sortState={sortState} onSortChange={onSortChange} />
 
       <div className="relative bg-inherit" style={{ height: virtualized ? getTotalSize() : undefined }}>

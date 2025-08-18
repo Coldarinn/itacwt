@@ -62,8 +62,8 @@ export const Products = reatomComponent(() => {
   ]
 
   return (
-    <div className="p-6 max-h-[calc(100svh-83px-48px)] flex flex-col">
-      <div className="mb-4">
+    <div className="max-h-[calc(100svh-83px-48px-16px)] min-h-[700px] flex flex-col gap-4 relative">
+      <div>
         <Filters
           filters={filters}
           availableFilters={availableFilters}
@@ -75,9 +75,10 @@ export const Products = reatomComponent(() => {
         />
       </div>
 
-      <div className="relative flex-1">
+      <div className="flex min-h-0">
         {filteredData?.length > 0 || isFetching ? (
           <Table
+            className="min-w-[1000px]"
             data={filteredData}
             columns={columns}
             getRowId={({ id }) => id}
@@ -86,11 +87,11 @@ export const Products = reatomComponent(() => {
             virtualized={{ rowHeight: 58 }}
           />
         ) : (
-          <Empty description={filters.length > 0 ? "Try changing your filters" : "No products found"} />
+          <Empty className="w-full" description={filters.length > 0 ? "Try changing your filters" : "No products found"} />
         )}
-
-        <Loader isLoading={isFetching} />
       </div>
+
+      <Loader isLoading={isFetching} />
     </div>
   )
 })

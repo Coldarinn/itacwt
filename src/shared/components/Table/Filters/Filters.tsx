@@ -1,6 +1,8 @@
+import cls from "classnames"
 import { useCallback } from "react"
 import { v4 as uuidv4 } from "uuid"
 
+import "../styles.css"
 import type { FilterCondition, FilterConfig, FilterOperator } from "./types"
 
 type FiltersProps = {
@@ -67,7 +69,7 @@ export const Filters = (props: FiltersProps) => {
     if (!config) return null
 
     const commonProps = {
-      className: "w-full p-2 bg-white/5 border border-white/10 rounded",
+      className: "input",
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => onUpdate(filter.id, { value: e.target.value }),
     }
 
@@ -79,11 +81,7 @@ export const Filters = (props: FiltersProps) => {
       case "boolean":
         return (
           !["isTrue", "isFalse"].includes(filter.operator) && (
-            <select
-              className="p-2 bg-white/5 border border-white/10 rounded"
-              value={String(filter.value)}
-              onChange={(e) => onUpdate(filter.id, { value: e.target.value === "true" })}
-            >
+            <select className="select input" value={String(filter.value)} onChange={(e) => onUpdate(filter.id, { value: e.target.value === "true" })}>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
@@ -94,7 +92,7 @@ export const Filters = (props: FiltersProps) => {
           <div className="flex gap-2">
             <input
               type="date"
-              className="p-2 bg-white/5 border border-white/10 rounded"
+              className="input"
               value={(filter.value as { from?: string })?.from || ""}
               onChange={(e) =>
                 onUpdate(filter.id, {
@@ -104,7 +102,7 @@ export const Filters = (props: FiltersProps) => {
             />
             <input
               type="date"
-              className="p-2 bg-white/5 border border-white/10 rounded"
+              className="input"
               value={(filter.value as { to?: string })?.to || ""}
               onChange={(e) =>
                 onUpdate(filter.id, {
@@ -118,12 +116,7 @@ export const Filters = (props: FiltersProps) => {
         )
       case "select":
         return (
-          <select
-            className="p-2 bg-white/5 border border-white/10 rounded"
-            value={filter.value as string}
-            onChange={(e) => onUpdate(filter.id, { value: e.target.value })}
-          >
-            <option value="">Select an option</option>
+          <select className="select input" value={filter.value as string} onChange={(e) => onUpdate(filter.id, { value: e.target.value })}>
             {config.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -137,29 +130,28 @@ export const Filters = (props: FiltersProps) => {
   }
 
   return (
-    <div className={`panel mb-4 animate-fadeIn ${className}`}>
+    <div className={`panel mb-4 ${className}`}>
       <div className="space-y-3">
         {filters.map((filter) => {
           const config = availableFilters.find((f) => f.field === filter.field)
           const availableOperators = config?.operators || []
 
           return (
-            <div key={filter.id} className="flex items-end gap-3">
+            <div key={filter.id} className="flex items-end gap-2">
               {onToggle && (
                 <button
                   onClick={() => onToggle(filter.id)}
-                  className={`p-2 rounded ${filter.isActive !== false ? "bg-green-500/20 text-green-500" : "bg-gray-500/20 text-gray-500"}`}
+                  className={cls("btn btn-ghost filters-btn", {
+                    "bg-green-500/20! text-green-500!": filter.isActive !== false,
+                    "bg-gray-500/20! text-gray-500!": filter.isActive === false,
+                  })}
                 >
                   {filter.isActive !== false ? "✓" : "✗"}
                 </button>
               )}
 
               <div className="flex-1 grid grid-cols-3 gap-2">
-                <select
-                  className="p-2 bg-white/5 border border-white/10 rounded"
-                  value={filter.field}
-                  onChange={(e) => handleFieldChange(filter.id, e.target.value)}
-                >
+                <select className="select input" value={filter.field} onChange={(e) => handleFieldChange(filter.id, e.target.value)}>
                   {availableFilters.map((f) => (
                     <option key={f.field} value={f.field}>
                       {f.label}
@@ -168,7 +160,7 @@ export const Filters = (props: FiltersProps) => {
                 </select>
 
                 <select
-                  className="p-2 bg-white/5 border border-white/10 rounded"
+                  className="select input"
                   value={filter.operator}
                   onChange={(e) => onUpdate(filter.id, { operator: e.target.value as FilterOperator })}
                 >
@@ -182,7 +174,7 @@ export const Filters = (props: FiltersProps) => {
                 {renderValueInput(filter)}
               </div>
 
-              <button onClick={() => onRemove(filter.id)} className="btn-ghost p-2 hover:text-red-500" aria-label="Remove filter">
+              <button onClick={() => onRemove(filter.id)} className="btn btn-ghost filters-btn">
                 🗑️
               </button>
             </div>
@@ -191,7 +183,7 @@ export const Filters = (props: FiltersProps) => {
       </div>
 
       <div className="flex gap-3 mt-4">
-        <button onClick={handleAddFilter} className="btn-primary">
+        <button onClick={handleAddFilter} className="btn-ghost btn-primary">
           {addButtonText}
         </button>
         {filters.length > 0 && (

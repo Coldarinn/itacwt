@@ -27,6 +27,8 @@ export type Column<T extends TRecord> = {
 } & EditableConfig<T>
 
 export type TableProps<T extends TRecord> = {
+  className?: string
+
   data: T[]
   columns: Column<T>[]
   getRowId: (row: T) => number | string

@@ -90,23 +90,11 @@ const renderField = <T extends TRecord>(col: Column<T>, value: unknown, onChange
 
   switch (fieldType) {
     case "number":
-      return (
-        <input
-          type="number"
-          value={(value as number) ?? ""}
-          onChange={(e) => onChange(col.key, e.target.valueAsNumber)}
-          className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
-        />
-      )
+      return <input type="number" value={(value as number) ?? ""} onChange={(e) => onChange(col.key, e.target.valueAsNumber)} className="input" />
     case "boolean":
       return (
         <label className="inline-flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={!!value}
-            onChange={(e) => onChange(col.key, e.target.checked)}
-            className="rounded border-[var(--color-border)]"
-          />
+          <input type="checkbox" checked={!!value} onChange={(e) => onChange(col.key, e.target.checked)} className="checkbox" />
           <span>{value ? "Yes" : "No"}</span>
         </label>
       )
@@ -115,10 +103,10 @@ const renderField = <T extends TRecord>(col: Column<T>, value: unknown, onChange
         <select
           value={value as SelectHTMLAttributes<HTMLSelectElement>["value"]}
           onChange={(e) => onChange(col.key, e.target.value)}
-          className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
+          className="select input"
         >
           {col.options?.map((option) => (
-            <option key={option.value} value={option.value} className="bg-slate-900 text-white">
+            <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -130,17 +118,10 @@ const renderField = <T extends TRecord>(col: Column<T>, value: unknown, onChange
           type="date"
           value={new Date((value || "") as string).toISOString().split("T")[0]}
           onChange={(e) => onChange(col.key, e.target.value)}
-          className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
+          className="input"
         />
       )
     default:
-      return (
-        <input
-          type="text"
-          value={(value as string) ?? ""}
-          onChange={(e) => onChange(col.key, e.target.value)}
-          className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
-        />
-      )
+      return <input type="text" value={(value as string) ?? ""} onChange={(e) => onChange(col.key, e.target.value)} className="input" />
   }
 }
