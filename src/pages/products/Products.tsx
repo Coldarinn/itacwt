@@ -4,6 +4,10 @@ import { useCallback } from "react"
 import { Empty } from "@/shared/components/Empty/Empty"
 import { Loader } from "@/shared/components/Loader"
 import { type Column, Table, editableColkey } from "@/shared/components/Table"
+import { Filters } from "@/shared/components/Table/Filters/Filters"
+import type { FilterConfig } from "@/shared/components/Table/Filters/types"
+import { useFilters } from "@/shared/components/Table/Filters/useFilters"
+import { applyFilters } from "@/shared/components/Table/Filters/utils"
 
 import { getProductsAction } from "./api"
 import type { Product } from "./types"
@@ -18,20 +22,71 @@ export const Products = reatomComponent(() => {
     getProductsAction.data.set((prev) => prev.map((item) => (item.id === updatedRow.id ? updatedRow : item)))
   }, [])
 
+  const { filters, activeFilters, addFilter, updateFilter, removeFilter, resetFilters, toggleFilter } = useFilters()
+
+  const filteredData = applyFilters(data || [], activeFilters)
+
+  const availableFilters: FilterConfig[] = [
+    {
+      field: "name",
+      type: "text",
+      label: "Name",
+      operators: ["contains", "equals", "startsWith", "endsWith"],
+      placeholder: "Search by name...",
+    },
+    {
+      field: "options.size",
+      type: "select",
+      label: "Size",
+      operators: ["equals"],
+      options: SIZES.map((size) => ({ label: size, value: size })),
+    },
+    {
+      field: "options.amount",
+      type: "number",
+      label: "Amount",
+      operators: ["equals", "greaterThan", "lessThan", "between"],
+    },
+    {
+      field: "active",
+      type: "boolean",
+      label: "Active",
+      operators: ["isTrue", "isFalse"],
+    },
+    {
+      field: "createdAt",
+      type: "date",
+      label: "Creation Date",
+      operators: ["between"],
+    },
+  ]
+
   return (
-    <div className="p-6 max-h-[calc(100svh-83px-48px)] flex">
-      <div className="relative w-full flex">
-        {data?.length > 0 || isFetching ? (
+    <div className="p-6 max-h-[calc(100svh-83px-48px)] flex flex-col">
+      <div className="mb-4">
+        <Filters
+          filters={filters}
+          availableFilters={availableFilters}
+          onAdd={addFilter}
+          onUpdate={updateFilter}
+          onRemove={removeFilter}
+          onReset={resetFilters}
+          onToggle={toggleFilter}
+        />
+      </div>
+
+      <div className="relative flex-1">
+        {filteredData?.length > 0 || isFetching ? (
           <Table
-            data={data}
+            data={filteredData}
             columns={columns}
             getRowId={({ id }) => id}
-            rowsTotalCount={data.length}
+            rowsTotalCount={filteredData.length}
             onEdit={editHandler}
             virtualized={{ rowHeight: 58 }}
           />
         ) : (
-          <Empty />
+          <Empty description={filters.length > 0 ? "Try changing your filters" : "No products found"} />
         )}
 
         <Loader isLoading={isFetching} />

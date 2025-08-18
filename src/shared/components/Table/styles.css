@@ -27,3 +27,7 @@
 .loader {
   @apply w-5 h-5 border-2 border-white/70 border-t-transparent rounded-full animate-spin;
 }
+
+select option {
+  @apply bg-slate-900 text-white;
+}
