@@ -5,9 +5,11 @@ export type TRecord = Record<string, unknown>
 export type SortDirection = "asc" | "desc" | null
 export type SortState = { path: string; dir: SortDirection; comparator?: (a: unknown, b: unknown, direction: SortDirection) => number }
 
+export type FieldType = "text" | "number" | "boolean" | "date" | "select"
+
 type EditableConfig<T extends TRecord> = {
   editable?: boolean | ((row: T) => boolean)
-  fieldType?: "text" | "number" | "boolean" | "date" | "select"
+  fieldType?: FieldType
   options?: { value: string; label: string }[]
   validation?: (value: unknown) => string | null
 }
@@ -32,6 +34,8 @@ export type TableProps<T extends TRecord> = {
 
   sortState?: SortState
   onSortChange?: (s: SortState) => void
+
+  onEdit?: (updatedRow: T) => void
 
   virtualized?: {
     rowHeight?: number

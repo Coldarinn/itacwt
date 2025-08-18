@@ -1,6 +1,6 @@
 import type { SortDirection } from "@/shared/components/Table"
 
-export const SIZE_ORDER = ["S", "M", "L", "XL", "XXL"]
+export const SIZES = ["S", "M", "L", "XL", "XXL"]
 
 export const sizeComparator = (a: unknown, b: unknown, dir: SortDirection): number => {
   const normalize = (size: unknown): string => (typeof size === "string" ? size.toUpperCase().trim() : "")
@@ -8,8 +8,8 @@ export const sizeComparator = (a: unknown, b: unknown, dir: SortDirection): numb
   const sizeA = normalize(a)
   const sizeB = normalize(b)
 
-  const indexA = SIZE_ORDER.indexOf(sizeA)
-  const indexB = SIZE_ORDER.indexOf(sizeB)
+  const indexA = SIZES.indexOf(sizeA)
+  const indexB = SIZES.indexOf(sizeB)
 
   if (indexA >= 0 && indexB >= 0) return dir === "asc" ? indexA - indexB : indexB - indexA
 

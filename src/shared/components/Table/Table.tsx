@@ -21,6 +21,7 @@ const TableComponent = <T extends TRecord>(props: TableProps<T>) => {
     virtualized,
     onEndReached,
     isLoadingMore = false,
+    onEdit,
   } = props
 
   const [sortState, setSortState] = useState<SortState>(sortStateProp || { path: "", dir: null })
@@ -68,7 +69,7 @@ const TableComponent = <T extends TRecord>(props: TableProps<T>) => {
 
           return (
             <div key={vRow.key} className="" ref={measureElement}>
-              <Row row={row} columns={columns} />
+              <Row row={row} columns={columns} onEdit={onEdit} />
             </div>
           )
         })}
@@ -79,7 +80,7 @@ const TableComponent = <T extends TRecord>(props: TableProps<T>) => {
   const renderFlatRows = () =>
     sortedData.map((row) => {
       const id = getRowId(row)
-      return <Row key={id} row={row} columns={columns} />
+      return <Row key={id} row={row} columns={columns} onEdit={onEdit} />
     })
 
   const rows = virtualized ? renderVirtualizedRows() : renderFlatRows()

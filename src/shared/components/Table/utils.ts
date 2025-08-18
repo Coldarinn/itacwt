@@ -1,4 +1,4 @@
-import type { SortDirection, SortState } from "./types"
+import type { FieldType, SortDirection, SortState } from "./types"
 
 export const sortData = <T extends object>(rows: T[], sort: SortState | null): T[] => {
   if (!sort?.dir) return [...rows]
@@ -59,14 +59,22 @@ export const deepSet = <T>(obj: T, path: string, value: unknown): T => {
   return obj
 }
 
-export const formatDate = (value: string | number | Date) =>
+export const formatValue = (value: unknown, type: FieldType) => {
+  if (type === "date") return formatDate(value as string)
+
+  if (type === "number") return formatNumber(value as number)
+
+  return value as string
+}
+
+const formatDate = (value: string | number | Date) =>
   new Date(value).toLocaleDateString("ru-RU", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   })
 
-export const formatNumber = (value: number | string) => {
+const formatNumber = (value: number | string) => {
   return new Intl.NumberFormat("ru-RU", {
     style: "decimal",
     minimumFractionDigits: 2,

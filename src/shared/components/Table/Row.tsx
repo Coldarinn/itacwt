@@ -4,15 +4,28 @@ import { memo, useState } from "react"
 import { EditModal } from "./EditModal"
 import { editableColkey } from "./constants"
 import type { Column, TRecord } from "./types"
-import { deepGet } from "./utils"
+import { deepGet, formatValue } from "./utils"
 
 type Props<T extends TRecord> = {
   row: T
   columns: Column<T>[]
+  onEdit?: (updatedRow: T) => void
 }
 
-const RowComponent = <T extends TRecord>({ row, columns }: Props<T>) => {
+const RowComponent = <T extends TRecord>({ row, columns, onEdit }: Props<T>) => {
   const [isEditing, setIsEditing] = useState(false)
+
+  const renderCol = (row: T, index: number, col: Column<T>) =>
+    col.render?.(row, index) ?? (
+      <span className="truncate">
+        {col.fieldType ? formatValue(deepGet(row, col.key) as string, col.fieldType) : String(deepGet(row, col.key) || "—")}
+      </span>
+    )
+
+  const handleSave = (updatedRow: T) => {
+    onEdit?.(updatedRow)
+    setIsEditing(false)
+  }
 
   return (
     <div className="flex w-full border-b table-border row-hover">
@@ -31,12 +44,12 @@ const RowComponent = <T extends TRecord>({ row, columns }: Props<T>) => {
               Edit
             </button>
           ) : (
-            (col.render?.(row, index) ?? <span className="truncate">{String(deepGet(row, col.key)) || "—"}</span>)
+            renderCol(row, index, col)
           )}
         </div>
       ))}
 
-      <EditModal row={row} columns={columns} onSave={() => setIsEditing(false)} open={isEditing} onClose={() => setIsEditing(false)} />
+      <EditModal row={row} columns={columns} open={isEditing} onClose={() => setIsEditing(false)} onSave={handleSave} />
     </div>
   )
 }

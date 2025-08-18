@@ -2,6 +2,7 @@ import { type SelectHTMLAttributes, useState } from "react"
 
 import { Modal } from "@/shared/components/Modal"
 
+import { editableColkey } from "./constants"
 import type { Column, TRecord } from "./types"
 import { deepGet, deepSet } from "./utils"
 
@@ -66,7 +67,7 @@ export const EditModal = <T extends TRecord>({ row, columns, onSave, open, onClo
           .map((col) => {
             const isEditable = typeof col.editable === "function" ? col.editable(row) : col.editable !== false
 
-            if (!isEditable) return null
+            if (!isEditable || col.key === editableColkey) return null
 
             const value = deepGet(data, col.key)
             const error = errors[col.key]
@@ -117,11 +118,20 @@ const renderField = <T extends TRecord>(col: Column<T>, value: unknown, onChange
           className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
         >
           {col.options?.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option key={option.value} value={option.value} className="bg-slate-900 text-white">
               {option.label}
             </option>
           ))}
         </select>
+      )
+    case "date":
+      return (
+        <input
+          type="date"
+          value={new Date((value || "") as string).toISOString().split("T")[0]}
+          onChange={(e) => onChange(col.key, e.target.value)}
+          className="w-full bg-white/5 border border-[var(--color-border)] rounded-lg px-3 py-2"
+        />
       )
     default:
       return (
